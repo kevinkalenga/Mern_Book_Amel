@@ -1,5 +1,5 @@
-import asyncHandler from "../middleware/asyncHandler";
-import Product from "../model/productModel";
+import asyncHandler from "../middleware/asyncHandler.js";
+import Product from "../model/productModel.js";
 
 // get all product (public)
 

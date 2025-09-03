@@ -134,3 +134,93 @@ const updateUserProfile = asyncHandler(async (req, res) => {
         throw new Error("user not found")
     }
 })
+
+// get all users (private admin)
+const getUsers = asyncHandler(async(req, res) => {
+    const users = await User.find({})
+    res.status(200).json(users)
+})
+
+// delete user (private admin)
+
+const deleteUser = asyncHandler(async(req, res) => {
+     const user = await User.findById(req.params.id);
+
+     if(!user) {
+       res.status(400)
+       throw new Error("L'utilisateur non trouvé")
+        
+     }
+
+     if(user.isAdmin) {
+          res.status(400)
+          throw new Error("Vous ne pouvez pas supprimer le compte admin")
+     }
+
+     await User.deleteOne({_id: user._id})
+     res.status(200).json({message: "L'utilisateur supprimé"})
+})
+
+// get user by id (private admin)
+const getUserById = asyncHandler(async(req, res) => {
+    const user = await User.findById(req.params.id).select('-password')
+    if(user) {
+        res.status(200).json(user)
+    } else {
+      res.status(400)
+       throw new Error("L'utilisateur non trouvé")
+    }
+})
+
+// update user (private admin)
+const updateUser = asyncHandler(async(req, res) => {
+     const user = await User.findById(req.params.id)
+
+    if(!user) {
+       res.status(400)
+       throw new Error("L'utilisateur non trouvé")
+        
+    }
+
+    if(req.body.email && !validator.isEmail(req.body.email)) {
+        res.status(400)
+        throw new Error("L'adresse email invalide")
+    }
+
+    // empecher le modif de role admin
+    if(user.isAdmin && req.body.isAdmin === false) {
+        res.status(400)
+        throw new Error("Vous ne pouvez pas changer le role admin")
+    }
+
+    // Mise à jour des champs
+    user.name = req.body.name ?? user.name;
+    user.email = req.body.email ?? user.email;
+
+    // Mise à jour de isAdmin seulement si fourni (si authorisé)
+    if(typeof req.body.isAdmin !== 'undefined') {
+        user.isAdmin = Boolean(req.body.isAdmin)
+    }
+
+    const updatedUser = await user.save()
+
+    res.status(200).json({
+        _id: updatedUser._id,
+        name: updatedUser.name,
+        email: updatedUser.email,
+        isAdmin: updatedUser.isAdmin
+
+    })
+})
+
+export {
+    authUser,
+    registerUser,
+    logoutUser,
+    getUserProfile,
+    updateUserProfile,
+    getUsers,
+    deleteUser,
+    getUserById,
+    updateUser
+}

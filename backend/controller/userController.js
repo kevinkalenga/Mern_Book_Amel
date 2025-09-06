@@ -27,6 +27,7 @@ const authUser = asyncHandler(async(req, res) => {
 
 // sign up user
 const registerUser = asyncHandler(async(req, res) => {
+    console.log(req.body)
       const {name, email, password} = req.body;
 
       if(!validator.isStrongPassword(password, {
@@ -131,7 +132,7 @@ const updateUserProfile = asyncHandler(async (req, res) => {
         })
     } else {
         res.status(404)
-        throw new Error("user not found")
+        throw new Error("Utilisateur non rouvé")
     }
 })
 

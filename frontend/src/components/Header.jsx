@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux"
 import {useNavigate, Link} from 'react-router-dom'
 import { useLogoutMutation } from "../slices/usersApiSlice"
 import { logout } from "../slices/authSlice"
-import {FashoppingCart, FaUser, FaChevronDown, FaBars, FaSignOutAlt, FaTimes} from 'react-icons/fa'
+import {FaShoppingCart, FaUser, FaChevronDown, FaBars, FaSignOutAlt, FaTimes} from 'react-icons/fa'
 
 
 
@@ -30,7 +30,7 @@ function Header() {
 
       return(
         <header className="bg-orange-700 text-white">
-             <div className="container mx-auto flex items-center just-between p-4">
+             <div className="container mx-auto flex items-center justify-between p-4">
                  <Link to='/' className="flex items-center gap-2 text-lg font-bold">
                     <img src="/images/logo.png" alt="logo" className="h-8" />
                  </Link>
@@ -49,7 +49,7 @@ function Header() {
                     z-50
                  `}>
                     <Link to='/cart' className="relative flex items-center gap-2 p-2 md:p-0">
-                        <FashoppingCart /> Panier
+                        <FaShoppingCart /> Panier
                     </Link>
 
                     {

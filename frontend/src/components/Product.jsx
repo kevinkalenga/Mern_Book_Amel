@@ -1,6 +1,8 @@
-import { Link } from "react-router-dom";
+import { Link} from "react-router-dom";
 import Rating from "./Rating";
 import { FaEye } from "react-icons/fa";
+
+
 
 function Product({product}) {
   return(

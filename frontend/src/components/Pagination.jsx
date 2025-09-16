@@ -1,33 +1,32 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
 
- function Pagination({pages, page, keyword="", isAdmin=false}) {
+import { Link } from "react-router-dom";
+
+function Pagination({ page, pages, keyword = "", isAdmin = false }) {
+  if (pages <= 1) return null;
+
   return (
-    page > 1 && (
-       <div className='flex justify-center mt-8'>
-           <nav className='block'>
-               <ul className='flex pl-0 rounded list-none flex-wrap'>
-                  {[...Array(pages).keys()].map((x) => (
-                    <li key={x+1}>
-                        <Link to={isAdmin ? 
-                             `/admin/productlist/${x+1}`: 
-                             keyword ? `/search/${keyword}/${x+1}`: `/page/${x+1}`}
-                             className={`${x+1 === page ? 
-                                "bg-primary text-white":
-                                 "text-black hover:bg-secondary hover:text-white"}
-                                  first:ml-0 text-xs font-semibold flex w-8 h-8 mx-1
-                                   rounded-full items-center leading-tight relative border border-solid border-primary`}
-                             >
-                                {x+1}
-                        </Link>
-                    </li>
-                  ))}
-               </ul>
-           </nav>
-       </div>
-    )
-    
-  )
+    <div className="flex justify-center mt-6 gap-2">
+      {[...Array(pages).keys()].map((x) => (
+        <Link
+          key={x + 1}
+          to={
+            isAdmin
+              ? `/admin/productlist/${x + 1}`
+              : keyword
+              ? `/search/${keyword}/page/${x + 1}`
+              : `/page/${x + 1}`
+          }
+          className={`px-3 py-1 border rounded ${
+            x + 1 === page ? "bg-blue-500 text-white" : "bg-white"
+          }`}
+        >
+          {x + 1}
+        </Link>
+      ))}
+    </div>
+  );
 }
 
-export default Pagination
+export default Pagination;
+
+

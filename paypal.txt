@@ -1,0 +1,30 @@
+Va sur le site développeur PayPal :
+👉 https://developer.paypal.com 
+
+Dans le menu de gauche :
+👉 va dans Testing Tools → Sandbox Accounts
+Ici, tu vois les comptes de test que PayPal t’a créés (un acheteur et un vendeur).
+Tu peux en créer d’autres si besoin.
+
+Toujours dans le menu de gauche :
+👉 va dans My Apps & Credentials.
+
+Dans la section Sandbox, clique sur Create App.
+
+Là tu donnes un nom à ton application (par exemple ShopEcommerce).
+
+Tu choisis un compte sandbox (vendeur/business) auquel l’app sera liée.
+
+Une fois ton app créée, tu verras :
+
+✅ Client ID
+
+✅ Secret
+
+🚀 Ensuite
+
+Tu copies ces deux valeurs dans ton .env :
+
+PAYPAL_MODE=sandbox
+PAYPAL_SANDBOX_CLIENT_ID=ton_client_id
+PAYPAL_SANDBOX_CLIENT_SECRET=ton_client_secret

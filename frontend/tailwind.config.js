@@ -9,6 +9,9 @@ export default {
       colors: {
         primary: "#1d4ed8",
         secondary: "#9333ea"
+      },
+      backdropBlur: {
+        xs: '2px',
       }
 
     },

@@ -57,6 +57,7 @@ function ProductScreen() {
                 {error?.data?.message || error.error}
             </Message>
          ):(
+          <>
             <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-8'>
                 <div className='lg:col-span-1'>
                    <img src={product.image} alt={product.name} className='w-full rounded-lg shadow-lg' />
@@ -65,13 +66,15 @@ function ProductScreen() {
                    <h1 className='text-3xl font-bold text-gray-900 border-b border-gray-300 pb-4'>
                      {product.name}
                    </h1>
+                   <div className='mt-4 border-b border-gray-300 pb-4'>
+                       <Rating value={product.rating} text={`${product.numReviews} Reviews`} />
+                        <p className='mt-4 text-gray-700'>
+                           {product.description}
+                        </p>
+                   </div>
+               
                 </div>
-                <div className='mt-4 border-b border-gray-300 pb-4'>
-                   <Rating value={product.rating} text={`${product.numReviews} Reviews`} />
-                </div>
-                <p className='mt-4 text-gray-700'>
-                    {product.description}
-                </p>
+               
                 <div className='lg:col-span-1'>
                    <div className='bg-white p-6 rounded-lg shadow-md'>
                      <div className='space-y-4'>
@@ -95,7 +98,7 @@ function ProductScreen() {
                                <select 
                                 className='w-full border rounded 
                                 focus:outline-none focus:ring-2
-                                 focus:ring-blue-500' value={qty} name="" id="qty"
+                                 focus:ring-blue-500 p-2' value={qty} name="" id="qty"
                                  onChange={(e) => setQty(Number(e.target.value))}
                                  >
                                    {
@@ -123,7 +126,7 @@ function ProductScreen() {
                    <div className='mt-8'>
                       <h2 className='text-2xl font-bold text-gray-900'>Evaluations</h2>
                       {
-                        product.review.length === 0 ? (
+                        product.reviews.length === 0 ? (
                            <Message>
                               Aucune evaluation trouvé
                            </Message>
@@ -136,9 +139,10 @@ function ProductScreen() {
                                           <strong className='text-gray-900'>
                                              {review.name}
                                           </strong>
-                                          <Rating value={review.rating} />
+                                          <Rating value={Math.round(Number(review.rating) * 10) / 10} />
                                           <p className='text-sm text-gray-500'>
-                                              {review.createdAt.subString(0, 10)}
+                                              {/* {review.createdAt.subString(0, 10)} */}
+                                              {new Date(review.createdAt).toLocaleTimeString()}
                                           </p>
 
                                        </div>
@@ -150,7 +154,7 @@ function ProductScreen() {
                         )
                       }
                      {
-                        userInfo && isOpen && (
+                        userInfo && !isOpen && (
                            <button className='w-48 py-2 bg-primary
                             text-white rounded-lg font-semibold
                              hover:bg-secondary mt-6' onClick={() => setIsOpen(true)}>Ajout d'une évaluation</button>
@@ -161,6 +165,52 @@ function ProductScreen() {
 
                 </div>
             </div>
+            {
+               isOpen && (
+                  <div className='fixed inset-0 flex items-center justify-center z-50'>
+                     <div className='fixed inset-0 backdrop-blur-xs' onClick={() => setIsOpen(false)}></div>
+                     <div className='bg-white p-6 rounded-lg shadow-sm w-96 relative z-50'>
+                            <button onClick={() => setIsOpen(false)}>
+                               <FaWindowClose 
+                                 size={25}
+                                 className="text-primary hover:text-primary"
+                               />
+                           </button>
+                           <h2 className='text-xl font-bold text-gray-900 my-4'>Ajout d'une évaluation</h2>
+                           {
+                              loadingProductReview && <Loader />
+                           }
+
+                           <form onSubmit={submitHandler} className="space-y-4">
+                               <div>
+                                  <label className="block text-gray-700 font-semibold mb-2">Notes:</label>
+                                  <select onChange={(e) => setRating(e.target.value)}
+                                     required value={rating} 
+                                     className="w-full border rounded-lg focus:outline-none
+                                      focus:ring-2 focus:ring-primary">
+                                         <option value="">Select...</option>
+                                         <option value="1">1 - Faible</option>
+                                         <option value="2">2 - Correcte</option>
+                                         <option value="3">3 - Bien</option>
+                                         <option value="4">4 - Trés bien</option>
+                                         <option value="5">5 - Excellent</option>
+                                  </select>
+                               </div>
+                               <div>
+                                <label className="block text-gray-700 font-semibold mb-2">Commentaire</label>
+                                <textarea className="w-full p-2 border rounded-lg focus:outline-none 
+                                focus:ring-2 focus:ring-primary" rows="4" required value={comment} onChange={(e) => setComment(e.target.value)}></textarea>
+                               </div>
+                               <button type="submit" className="w-full py-2 bg-primary text-white rounded-lg font-semibold hover:bg-secondary" disabled={loadingProductReview}>
+                                   Valider
+                               </button>
+                           </form>
+                     </div>
+                  </div>
+               )
+            }
+          </>
+            
          )
        }
     </div>

@@ -101,22 +101,17 @@ function ProductScreen() {
                         product.countInStock > 0 && (
                             <div className='mt-4'>
                                <label className='block text-gray-700 font-semibold' htmlFor="qty">Quantité</label>
-                               <select 
-                                className='w-full border rounded 
-                                focus:outline-none focus:ring-2
-                                 focus:ring-blue-500 p-2' value={qty} name="" id="qty"
-                                 onChange={(e) => setQty(Number(e.target.value))}
-                                 >
-                                   {
-                                     [...Array(product.countInStock).keys()].map((x) => {
-                                        <option key={x+1} value={x+1}>
-                                            {" "} {x + 1}
-                                        </option>
-                                     })
-                                   }
-                                   
-                               </select>
-                            </div>
+                                    <select name="" id="qty" className="w-full border rounded focus:outline-none focus:ring-2 p-2 focus:ring-blue-500" value={qty} onChange={(e) => setQty(Number(e.target.value))}>
+                                             {
+                                                [...Array(product.countInStock).keys()].map((x) => (
+                                                    <option key={x + 1} value={x + 1}>
+                                                        {" "}
+                                                        {x + 1}
+                                                    </option>
+                                                ))
+                                             }
+                                   </select>
+                                </div>
                         )
                        }
                        <button className={`w-full mt-6 py-3 rounded-lg font-semibold

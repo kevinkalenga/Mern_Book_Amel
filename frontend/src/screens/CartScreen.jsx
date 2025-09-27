@@ -8,8 +8,10 @@ function CartScreen(){
   const navigate = useNavigate();
   const dispatch = useDispatch()
 
-  const {cart} = useSelector((state) => state.cart)
+  // const cart = useSelector((state) => state.cart) || { cartItems: []}
+  const cart = useSelector((state) => state.cart) || { cartItems: [] };
   const {cartItems} = cart
+  console.log(cartItems)
 
   const addToCardHandler = (product, qty) => {
     dispatch(addToCart({...product, qty}))
@@ -61,7 +63,7 @@ function CartScreen(){
                                  focus:ring-primary transition-all duration-300"
                                   onChange={(e) => addToCardHandler(item, Number(e.target.value))} value={item.qty}>
                                               {
-                                                [...Array(product.countInStock).keys()].map((x) => (
+                                                [...Array(item.countInStock).keys()].map((x) => (
                                                     <option key={x + 1} value={x + 1}>
                                                         {" "}
                                                         {x + 1}

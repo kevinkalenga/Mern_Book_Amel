@@ -8,7 +8,7 @@ function CartScreen(){
   const navigate = useNavigate();
   const dispatch = useDispatch()
 
-  // const cart = useSelector((state) => state.cart) || { cartItems: []}
+  
   const cart = useSelector((state) => state.cart) || { cartItems: [] };
   const {cartItems} = cart
   console.log(cartItems)
@@ -32,7 +32,7 @@ function CartScreen(){
         cartItems.length === 0 ? (
           <Message>
             Le panier est vide 
-            <Link to="/" className="text-blue-500 underline">Retourne</Link>
+            <Link to="/" className="text-blue-500 underline"> Retourne</Link>
           </Message>
         ):(
           <div className="flex flex-col lg:flex-row gap-8">
@@ -53,7 +53,7 @@ function CartScreen(){
                                 {item.name}
                               </Link>
                               <p className="text-gray-600 mt-1">
-                                {item.price}
+                                {item.price} $
                               </p>
 
                             </div>

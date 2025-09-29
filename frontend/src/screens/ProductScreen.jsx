@@ -39,6 +39,8 @@ function ProductScreen() {
                rating,
                comment
             }).unwrap();
+             refetch();
+             setIsOpen(false)
             toast.success('Avis créé avec succès')
         } catch (error) {
             
@@ -87,7 +89,7 @@ function ProductScreen() {
                        <p className='flex justify-between text-lg'>
                          <span className='text-gray-600'>Price:</span>
                          <span className='font-semibold'>
-                            €{product.price}
+                            ${product.price}
                          </span>
                        </p>
                        <p className='flex justify-between text-lg'>

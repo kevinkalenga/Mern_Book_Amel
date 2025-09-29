@@ -94,44 +94,83 @@ const deleteProduct = asyncHandler(async(req, res) => {
     }
 })
 
-// create product review
 
-const createProductReview = asyncHandler(async(req, res) => {
-    const {rating, comment} = req.body 
-    const product = await Product.findById(req.params.id)
 
-    if(product) {
-        const alreadyReviewed = product.reviews.find(
-            (review) => review.user.toString() === req.user._id.toString()
-        )
-        if(alreadyReviewed) {
-             res.status(404)
-             throw new Error("Produit deja evalué")
-        }
 
-        const review = {
-            name: req.user.name,
-            rating: Number(rating),
-            comment,
-            user: req.user._id
-        }
+// create product review (private)
+const createProductReview = asyncHandler(async (req, res) => {
+    const { rating, comment } = req.body;
 
-        product.reviews.push(review)
-        product.numReviews = product.reviews.length 
-         
-        product.rating = product.reviews.reduce((acc, review) => acc + review.rating, 0)
+    const product = await Product.findById(req.params.id);
 
-        product.reviews.length;
+    
+    if (!product) {
+        res.status(404);
+        throw new Error('Product not found');
+    }
 
+     // Vérifier si l'utilisateur a déjà fait un review
+    const existingReview = product.reviews.find(
+        (review) => review.user.toString() === req.user._id.toString()
+    );
+
+   
+
+    if (existingReview) {
+        // Mettre à jour le review existant
+        existingReview.rating = Number(rating);
+        existingReview.comment = comment;
+        // ← mise à jour de la date
+        existingReview.createdAt = new Date(); 
         await product.save();
 
-        res.status(201).json({message: "L'ajout d'une evaluation reussi"})
+        // Recalculer la note moyenne
+        product.rating =
+            product.reviews.reduce((acc, review) => acc + review.rating, 0) /
+            product.reviews.length;
 
-    } else {
-        res.status(404)
-        throw new Error("Produit non trouvé")
+        await product.save();
+        return res.status(200).json({ message: 'Review updated', product });
     }
-})
+
+
+     // Sinon, créer un nouveau review
+    const review = {
+        name: req.user.name,
+        rating: Number(rating),
+        comment,
+        user: req.user._id,
+        createdAt: new Date(),
+    };
+
+    product.reviews.push(review);
+    product.numReviews = product.reviews.length;
+
+    // Recalculer la note moyenne
+    product.rating =
+        product.reviews.reduce((acc, review) => acc + review.rating, 0) /
+        product.reviews.length;
+
+    await product.save();
+    
+    const populatedProduct = await Product.findById(product._id)
+    .populate("reviews.user", "name");
+
+    // arrondir rating à 1 décimale pour chaque review
+   populatedProduct.reviews = populatedProduct.reviews.map((rev) => ({
+    ...rev.toObject(),
+    rating: Math.round(Number(rev.rating) * 10) / 10
+  }));
+
+  populatedProduct.rating = Math.round(Number(populatedProduct.rating) * 10) / 10;
+    
+    
+    res.status(201).json({
+         success: true,
+         product: populatedProduct,
+         message: existingReview ? "Review updated" : "Review added"
+     });
+});
 
 
 

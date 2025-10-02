@@ -3,31 +3,57 @@ import Product from "../model/productModel.js";
 
 // get all product (public)
 
-const getProducts = async(req, res) => {
+// const getProducts = async(req, res) => {
     
     
     
-    try {
-        const pageSize = 10;
-        const page = Number(req.query.pageNumber) || 1;
-        const keyword = req.query.keyword ? {
-            name: {
-                $regex: req.query.keyword,
-                $options: 'i'
-            }
-        } : {};
-        const count = await Product.countDocuments(({...keyword}))
-         const products = await Product.find({...keyword}).limit(pageSize).skip(pageSize * (page - 1))
-         res.json({products, page, pages: Math.ceil(count / pageSize)})
-    } catch (error) {
-        res.status(500).json({message:error.message})
-    }
+//     try {
+//         const pageSize = 10;
+//         const page = Number(req.query.pageNumber) || 1;
+//         const keyword = req.query.keyword ? {
+//             name: {
+//                 $regex: req.query.keyword,
+//                 $options: 'i'
+//             }
+//         } : {};
+//         const count = await Product.countDocuments(({...keyword}))
+//          const products = await Product.find({...keyword}).limit(pageSize).skip(pageSize * (page - 1))
+//          res.json({products, page, pages: Math.ceil(count / pageSize)})
+//     } catch (error) {
+//         res.status(500).json({message:error.message})
+//     }
   
     
 
     
   
-}
+// }
+
+
+const getProducts = async (req, res) => {
+  try {
+    const pageSize = 10;
+    const page = Number(req.query.pageNumber) || 1;
+
+    const keyword = req.query.keyword
+      ? {
+          name: {
+            $regex: req.query.keyword,
+            $options: 'i',
+          },
+        }
+      : {};
+
+    const count = await Product.countDocuments({ ...keyword });
+    const products = await Product.find({ ...keyword })
+      .limit(pageSize)
+      .skip(pageSize * (page - 1));
+
+    res.json({ products, page, pages: Math.ceil(count / pageSize) });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
 
 // get single product (public)
 const getProductById = asyncHandler(async(req, res) => {
